@@ -18,7 +18,6 @@ router.get("/:phone", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { phone, name, password } = req.body;
-  console.log("Received request to create user:", { phone, name }); 
 
   try {
     let user = await User.findOne({ phone });

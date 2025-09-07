@@ -5,6 +5,9 @@ import authRoutes from "./routes/authRoutes.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import User from "./models/User.js";
+import { Server } from "socket.io";
+import registerSocketHandlers from "./socket.js";
+import conversationRoutes from "./routes/conversationRoutes.js";
 
 dotenv.config();
 
@@ -36,5 +39,16 @@ app.get("/test", (req, res) => {
 
 app.use("/api/users",userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/conversations", conversationRoutes);
 
-app.listen(5000, '0.0.0.0', ()=>{console.log("Server running on Port 5000")})
+const server = app.listen(5000, '0.0.0.0', ()=>{console.log("Server running on Port 5000")})
+
+const io = new Server(server,{
+  cors:{
+    "origin":"*",
+    "methods":["GET","POST"]
+  }
+})
+
+registerSocketHandlers(io);
+export{io};
